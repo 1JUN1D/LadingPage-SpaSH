@@ -1221,7 +1221,72 @@
                 bookButton.textContent = t.bookNow;
             }
         });
+    
+    
     }
+
+    // ===========================================
+// LISTENER GLOBAL PARA EVENTOS DE CALENDLY
+// ===========================================
+window.addEventListener('message', function (e) {
+  if (e.data.event && e.data.event.indexOf('calendly') === 0) {
+    console.log('Calendly Event:', e.data.event);
+
+    // Cuando se completa el agendamiento
+    if (e.data.event === 'calendly.event_scheduled') {
+      console.log('¡Cita agendada exitosamente!');
+
+      const eventDetails = e.data.payload;
+      let serviceName = 'Spa Service';
+
+      // Obtener el nombre del servicio desde el URI de Calendly
+      if (eventDetails && eventDetails.event && eventDetails.event.uri) {
+        const uri = eventDetails.event.uri;
+
+        // Extraer el tipo de servicio del URI
+        if (uri.includes('therapeutic')) serviceName = 'Therapeutic Massage';
+        else if (uri.includes('deep-tissue')) serviceName = 'Deep Tissue Massage';
+        else if (uri.includes('sports')) serviceName = 'Sports Massage';
+        else if (uri.includes('relaxing')) serviceName = 'Relaxing Massage';
+        else if (uri.includes('couple')) serviceName = 'Couples Massage';
+        else if (uri.includes('cupping')) serviceName = 'Cupping Massage';
+        else if (uri.includes('prenatal')) serviceName = 'Prenatal Massage';
+        else if (uri.includes('postpartum')) serviceName = 'Postpartum Massage';
+        else if (uri.includes('decontracting')) serviceName = 'Decontracting Massage';
+        else if (uri.includes('hot-stone')) serviceName = 'Hot Stone Massage';
+        else if (uri.includes('hot-candle')) serviceName = 'Hot Candle Massage';
+        else if (uri.includes('lomi-lomi')) serviceName = 'Lomi Lomi Massage';
+        else if (uri.includes('special-decoration')) serviceName = 'Special Decoration Massage';
+        else if (uri.includes('four-hands')) serviceName = '4 Hands Massage';
+        else if (uri.includes('basic-facial')) serviceName = 'Basic Facial Cleansing';
+        else if (uri.includes('deep-facial')) serviceName = 'Deep Facial Cleansing';
+        else if (uri.includes('porcelain-facial')) serviceName = 'Facial Porcelain Treatment';
+      }
+
+      console.log('Redirigiendo a confirmación con servicio:', serviceName);
+
+      // Pequeño delay para asegurar que Calendly termine su proceso
+      setTimeout(function () {
+        window.location.href =
+          'booking-confirmation.html?service=' + encodeURIComponent(serviceName);
+      }, 1000);
+    }
+  }
+});
+
+
+// =======================================================
+// FUNCIONES DE CALENDLY CON TRACKING YA INTEGRADO
+// =======================================================
+function openCalendlyTherapeutic() {
+  Calendly.initPopupWidget({
+    url: 'https://calendly.com/lidereslocalescol/therapeutic-massage',
+    prefill: {},
+    utm: {}
+  });
+  return false;
+}
+
     
     // Verificar que los píxeles estén cargados
     document.addEventListener('DOMContentLoaded', function() {
